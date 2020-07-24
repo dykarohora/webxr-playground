@@ -10,7 +10,13 @@
   },
   "dependencies": {
     "isomorphic-unfetch": "^3.0.0",
-    "nuxt": "^2.13.3"
+    "nuxt": "^2.13.3",
+    "nuxt-property-decorator": "^2.7.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@nuxt/types": "^2.13.3",
+    "@nuxt/typescript-build": "^2.0.0",
+    "ts-node-dev": "^1.0.0-pre.55",
+    "typescript": "^3.9.7"
+  }
 }

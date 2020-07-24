@@ -41,7 +41,7 @@
       this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
       this.renderer.setPixelRatio(window.devicePixelRatio)
       this.renderer.setSize(window.innerWidth, window.innerHeight)
-      this.renderer.xr.enabled = true
+      // this.renderer.xr.enabled = true
       container.appendChild(this.renderer.domElement)
 
       document.body.appendChild(ARButton.createButton(this.renderer, {requiredFeatures: ['hit-test']}))
@@ -70,10 +70,14 @@
     }
 
     animate() {
-      this.renderer.setAnimationLoop(this.render)
+      console.log('animate')
+      requestAnimationFrame(this.animate)
+      this.renderer.render(this.scene, this.camera)
+      // this.renderer.setAnimationLoop(this.render)
     }
 
     render() {
+      console.log('render')
       this.renderer.render(this.scene, this.camera)
     }
   }

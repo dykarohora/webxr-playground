@@ -93,13 +93,11 @@
       }
     }
 
-    render() {
-      this.handleController(this.controller)
-      this.renderer.render(this.scene, this.camera)
-    }
-
     animate() {
-      this.renderer.setAnimationLoop(this.render)
+      this.renderer.setAnimationLoop(() => {
+        this.handleController(this.controller)
+        this.renderer.render(this.scene, this.camera)
+      })
     }
   }
 </script>

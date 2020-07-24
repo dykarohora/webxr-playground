@@ -1,4 +1,4 @@
-import { Camera, Group, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { Group, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import * as THREE from 'three'
 import { ARButton } from './ARButton'
 
@@ -9,8 +9,8 @@ export class Cornes {
   private renderer: WebGLRenderer
   private controller: Group
 
-  public constructor() {
-    this.container = document.createElement('div')
+  public constructor(element: HTMLDivElement) {
+    this.container = element
     document.body.appendChild(this.container)
 
     this.scene = new Scene()
@@ -50,11 +50,9 @@ export class Cornes {
     this.animate()
   }
 
-  render() {
-    this.renderer.render(this.scene, this.camera)
-  }
-
   animate() {
-    this.renderer.setAnimationLoop(this.render)
+    this.renderer.setAnimationLoop(() => {
+      this.renderer.render(this.scene, this.camera)
+    })
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div id="canvas"></div>
 </template>
 
 <script lang="ts">
@@ -10,8 +10,11 @@
 
   @Component
   export default class extends Vue {
+    private cornes!: Cornes
+
     mounted() {
-      const cornes = new Cornes()
+      const divElement = document.getElementById('canvas') as HTMLDivElement
+      this.cornes = new Cornes(divElement)
     }
   }
 </script>

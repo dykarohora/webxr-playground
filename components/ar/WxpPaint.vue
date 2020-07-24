@@ -48,14 +48,12 @@
       this.scene.add(light)
 
       this.painter = new TubePainter()
-      //@ts-ignore
       this.painter.setSize(0.4)
       //@ts-ignore
       this.painter.mesh.material.side = THREE.DoubleSide
       this.scene.add(this.painter.mesh)
 
       this.controller = this.renderer.xr.getController(0)
-
       this.controller.addEventListener(
         'selectstart', () => {
           this.controller.userData.isSelecting = true
@@ -69,7 +67,6 @@
       )
 
       this.controller.userData.skipFrames = 0
-
       this.scene.add(this.controller)
 
       window.addEventListener('resize', () => {

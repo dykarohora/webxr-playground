@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>What Can I Deploy to Static Apps?</h1>
+    <h1>Welcome</h1>
     <div class="card-grid">
       <SmallCard
         v-bind:key="project.id"

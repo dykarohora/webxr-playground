@@ -46,29 +46,19 @@
 
       document.body.appendChild(ARButton.createButton(this.renderer, {requiredFeatures: ['hit-test']}))
 
-      const geometry = new THREE.CylinderBufferGeometry(0.1, 0.1, 0.2, 32).translate(0, 0.1, 0)
-
+      const geometry = new THREE.CylinderBufferGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2)
 
       this.controller = this.renderer.xr.getController(0)
+
       this.controller.addEventListener('select', () => {
-        if (this.reticle.visible) {
-          const material = new THREE.MeshPhongMaterial({color: 0xffffff * Math.random()})
-          const mesh = new THREE.Mesh(geometry, material)
-          mesh.position.setFromMatrixPosition(this.reticle.matrix)
-          mesh.scale.y = Math.random() * 2 + 1
-          this.scene.add(mesh)
-        }
+        const material = new THREE.MeshPhongMaterial({color: 0xffffff * Math.random()})
+        const mesh = new THREE.Mesh(geometry, material)
+        mesh.position.set(0, 0, -0.3).applyMatrix4(this.controller.matrixWorld)
+        mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld)
+        this.scene.add(mesh)
       })
 
       this.scene.add(this.controller)
-
-      this.reticle = new THREE.Mesh(
-        new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2),
-        new THREE.MeshBasicMaterial()
-      )
-      this.reticle.matrixAutoUpdate = false
-      this.reticle.visible = false
-      this.scene.add(this.reticle)
 
       window.addEventListener('resize', () => {
         //@ts-ignore
@@ -83,59 +73,8 @@
       this.renderer.setAnimationLoop(this.render)
     }
 
-    render(timestamp: any, frame: any) {
-
-      if (frame) {
-
-        const referenceSpace = this.renderer.xr.getReferenceSpace()
-        const session = this.renderer.xr.getSession()
-
-        if (this.hitTestSourceRequested === false) {
-
-          session.requestReferenceSpace('viewer').then((referenceSpace: any) => {
-
-            session.requestHitTestSource({space: referenceSpace}).then((source: any) => {
-
-              this.hitTestSource = source
-
-            })
-
-          })
-
-          session.addEventListener('end', () => {
-
-            this.hitTestSourceRequested = false
-            this.hitTestSource = null
-
-          })
-
-          this.hitTestSourceRequested = true
-
-        }
-
-        if (this.hitTestSource) {
-
-          const hitTestResults = frame.getHitTestResults(this.hitTestSource)
-
-          if (hitTestResults.length) {
-
-            const hit = hitTestResults[0]
-
-            this.reticle.visible = true
-            this.reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix)
-
-          } else {
-
-            this.reticle.visible = false
-
-          }
-
-        }
-
-      }
-
+    render() {
       this.renderer.render(this.scene, this.camera)
-
     }
   }
 </script>

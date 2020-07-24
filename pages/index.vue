@@ -6,6 +6,8 @@
   import Vue from 'vue'
   import * as THREE from 'three'
 
+  import { ARButton } from '../components/ar/ARButton'
+
   import { Component } from 'nuxt-property-decorator'
 
   @Component
@@ -22,10 +24,10 @@
 
     mounted() {
       this.init()
+      this.animate()
     }
 
     init() {
-
       const container = document.createElement('div')
       document.body.appendChild(container)
 
@@ -42,57 +44,39 @@
       this.renderer.xr.enabled = true
       container.appendChild(this.renderer.domElement)
 
-      if ('xr' in navigator) {
+      document.body.appendChild(ARButton.createButton(this.renderer, {requiredFeatures: ['hit-test']}))
+
+      const geometry = new THREE.CylinderBufferGeometry(0.1, 0.1, 0.2, 32).translate(0, 0.1, 0)
+
+
+      this.controller = this.renderer.xr.getController(0)
+      this.controller.addEventListener('select', () => {
+        if (this.reticle.visible) {
+          const material = new THREE.MeshPhongMaterial({color: 0xffffff * Math.random()})
+          const mesh = new THREE.Mesh(geometry, material)
+          mesh.position.setFromMatrixPosition(this.reticle.matrix)
+          mesh.scale.y = Math.random() * 2 + 1
+          this.scene.add(mesh)
+        }
+      })
+
+      this.scene.add(this.controller)
+
+      this.reticle = new THREE.Mesh(
+        new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2),
+        new THREE.MeshBasicMaterial()
+      )
+      this.reticle.matrixAutoUpdate = false
+      this.reticle.visible = false
+      this.scene.add(this.reticle)
+
+      window.addEventListener('resize', () => {
         //@ts-ignore
-        navigator.xr.isSessionSupported('immersive-ar').then((supported: boolean) => {
-          if (supported) {
-            //@ts-ignore
-            navigator.xr.requestSession('immersive-ar', {requiredFeatures: ['hit-test']}).then((session: any) => {
-              session.addEventListener('end', () => {
+        this.camera.aspect = window.innerWidth / window.innerHeight
+        this.camera.updateMatrixWorld()
 
-              })
-
-              this.renderer.xr.setReferenceSpaceType('local')
-              this.renderer.xr.setSession(session)
-
-              const geometry = new THREE.CylinderBufferGeometry(0.1, 0.1, 0.2, 32).translate(0, 0.1, 0)
-
-              this.controller = this.renderer.xr.getController(0)
-              this.controller.addEventListener('select', () => {
-                if (this.reticle.visible) {
-                  const material = new THREE.MeshPhongMaterial({color: 0xffffff * Math.random()})
-                  const mesh = new THREE.Mesh(geometry, material)
-                  mesh.position.setFromMatrixPosition(this.reticle.matrix)
-                  mesh.scale.y = Math.random() * 2 + 1
-                  this.scene.add(mesh)
-                }
-              })
-
-              this.scene.add(this.controller)
-
-              this.reticle = new THREE.Mesh(
-                new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2),
-                new THREE.MeshBasicMaterial()
-              )
-              this.reticle.matrixAutoUpdate = false
-              this.reticle.visible = false
-              this.scene.add(this.reticle)
-
-              window.addEventListener('resize', () => {
-                //@ts-ignore
-                this.camera.aspect = window.innerWidth / window.innerHeight
-                this.camera.updateMatrixWorld()
-
-                this.renderer.setSize(window.innerWidth, window.innerHeight)
-              }, false)
-
-              this.animate()
-            })
-          }
-        }).catch(() => {
-          return
-        })
-      }
+        this.renderer.setSize(window.innerWidth, window.innerHeight)
+      }, false)
     }
 
     animate() {
@@ -130,18 +114,28 @@
         }
 
         if (this.hitTestSource) {
+
           const hitTestResults = frame.getHitTestResults(this.hitTestSource)
+
           if (hitTestResults.length) {
+
             const hit = hitTestResults[0]
+
             this.reticle.visible = true
             this.reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix)
+
           } else {
+
             this.reticle.visible = false
+
           }
+
         }
+
       }
 
       this.renderer.render(this.scene, this.camera)
+
     }
   }
 </script>

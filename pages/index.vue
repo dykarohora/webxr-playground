@@ -1,20 +1,17 @@
 <template>
   <div class="home">
-    <b-card>
-      <b-card-title>
-        {{welcomeMessage}}
-      </b-card-title>
-      <paint/>
-    </b-card>
+    <wxp-paint/>
   </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'nuxt-property-decorator'
-  import Paint from '../components/ar/paint.vue'
+  import WxpPaint from '../components/ar/WxpPaint.vue'
+
+
   @Component({
-    components: {Paint}
+    components: {WxpPaint}
   })
   export default class extends Vue {
     public get welcomeMessage() {

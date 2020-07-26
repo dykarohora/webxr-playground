@@ -1,6 +1,6 @@
 <template>
-  <div id="canvas">
-    <wxp-paint/>
+  <div>
+    <canvas id="canvas" />
   </div>
 </template>
 
@@ -8,17 +8,14 @@
   import Vue from 'vue'
 
   import { Component } from 'nuxt-property-decorator'
-  import { Cornes } from '../components/ar/Cornes'
   import WxpPaint from '../components/ar/WxpPaint.vue'
-  @Component({
-    components: {WxpPaint}
-  })
+  import { RenderingSquare } from '../components/webgl2/ch2/RenderingSquare'
+
+  @Component
   export default class extends Vue {
-    // private cornes!: Cornes
-    //
-    // mounted() {
-    //   const divElement = document.getElementById('canvas') as HTMLDivElement
-    //   this.cornes = new Cornes(divElement)
-    // }
+    mounted() {
+      const canvas = document.getElementById('canvas') as HTMLCanvasElement
+      const square = new RenderingSquare(canvas)
+    }
   }
 </script>

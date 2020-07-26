@@ -7890,6 +7890,11 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
+type-result@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/type-result/-/type-result-0.9.5.tgz#74c711fdf95753fb392378fa7e52bc473339a6f8"
+  integrity sha512-xZMuNwQ63E3USVmWFNG4Y4vqDR+RezsWuFESLRXhuq3Jrm8iwvV9x++Hbuxf91sfL9x60A+X8SnDovHY+aeXZg==
+
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"

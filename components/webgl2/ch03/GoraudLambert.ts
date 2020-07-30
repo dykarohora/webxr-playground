@@ -5,7 +5,7 @@ import { calculateNormals, configureControls } from '../common/Utils'
 import { mat4 } from 'gl-matrix'
 
 export class GoraudLambert {
-  private gl: WebGL2RenderingContext
+  private gl!: WebGL2RenderingContext
   private program!: WebGLProgram
   private indices: number[] = []
 
@@ -33,6 +33,15 @@ export class GoraudLambert {
   private uMaterialDiffuse!: WebGLUniformLocation
 
   public constructor(canvas: HTMLCanvasElement) {
+    this.initProgram(canvas)
+    this.initBuffers()
+    this.initLights()
+    this.render()
+
+    this.initControls()
+  }
+
+  private initProgram(canvas: HTMLCanvasElement) {
 
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
@@ -44,17 +53,12 @@ export class GoraudLambert {
     }
 
     this.gl = getContextResult
+
     this.gl.clearColor(0.9, 0.9, 0.9, 1)
+    this.gl.clearDepth(100)
+    this.gl.enable(this.gl.DEPTH_TEST)
+    this.gl.depthFunc(this.gl.LEQUAL)
 
-    this.initProgram()
-    this.initBuffers()
-    this.initLights()
-    this.render()
-
-    this.initControls()
-  }
-
-  private initProgram() {
     const vertexShader = compileShader(this.gl, vertexShaderStr, 'VERTEX')
     const fragmentShader = compileShader(this.gl, fragmentShaderStr, 'FRAGMENT')
 
@@ -122,7 +126,7 @@ export class GoraudLambert {
 
   private render = () => {
     requestAnimationFrame(this.render)
-    // this.animate()
+    this.animate()
     this.draw()
   }
 

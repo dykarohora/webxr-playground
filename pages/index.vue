@@ -10,6 +10,7 @@
   import { Component } from 'nuxt-property-decorator'
   import { StateMachine } from '../components/webgl2/ch02/StateMachine'
   import { GoraudLambert } from '../components/webgl2/ch03/GoraudLambert'
+  import { GoraudPhong } from '../components/webgl2/ch03/GoraudPhong'
 
   @Component
   export default class extends Vue {

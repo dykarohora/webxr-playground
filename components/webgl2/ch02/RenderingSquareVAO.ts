@@ -1,3 +1,6 @@
+import vert1 from './shader/vertex1.vert'
+import fragment1 from './shader/fragment1.frag'
+
 export class RenderingSquareVAO {
   private indices: number[] = []
   private gl: WebGL2RenderingContext
@@ -7,30 +10,6 @@ export class RenderingSquareVAO {
   private squareIndexBuffer!: WebGLBuffer
 
   private aVertexPosition!: number
-
-  private readonly vertexShaderString =
-    '#version 300 es\n' +
-    'precision mediump float;\n' +
-    '\n' +
-    '// Supplied vertex position attribute\n' +
-    'in vec3 aVertexPosition;\n' +
-    '\n' +
-    'void main(void) {\n' +
-    '// Set the position in clipspace coordinates\n' +
-    'gl_Position = vec4(aVertexPosition, 1.0);\n' +
-    '}\n'
-
-  private readonly fragmentShaderString =
-    '#version 300 es\n' +
-    'precision mediump float;\n' +
-    '\n' +
-    '// Color that is the result of this shader\n' +
-    'out vec4 fragColor;\n' +
-    '\n' +
-    'void main(void) {\n' +
-    '// Set the result as red\n' +
-    'fragColor = vec4(1.0, 0.0, 1.0, 1.0);\n' +
-    '}'
 
   public constructor(canvas: HTMLCanvasElement) {
     canvas.width = window.innerWidth
@@ -80,8 +59,8 @@ export class RenderingSquareVAO {
   }
 
   private initProgram() {
-    const vertexShader = this.compileShader(this.vertexShaderString, 'VERTEX')
-    const fragmentShader = this.compileShader(this.fragmentShaderString, 'FRAGMENT')
+    const vertexShader = this.compileShader(vert1, 'VERTEX')
+    const fragmentShader = this.compileShader(fragment1, 'FRAGMENT')
 
     this.program = this.gl.createProgram()!
     this.gl.attachShader(this.program, vertexShader)

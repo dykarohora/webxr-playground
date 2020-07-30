@@ -8,13 +8,14 @@
   import Vue from 'vue'
 
   import { Component } from 'nuxt-property-decorator'
-  import { RenderingSquareVAO } from '../components/webgl2/ch2/RenderingSquareVAO'
+  import { StateMachine } from '../components/webgl2/ch02/StateMachine'
+  import { GoraudLambert } from '../components/webgl2/ch03/GoraudLambert'
 
   @Component
   export default class extends Vue {
     mounted() {
       const canvas = document.getElementById('canvas') as HTMLCanvasElement
-      const square = new RenderingSquareVAO(canvas)
+      const sphere = new GoraudLambert(canvas)
     }
   }
 </script>

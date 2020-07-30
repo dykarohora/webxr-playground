@@ -1,5 +1,5 @@
 export default {
-  mode: 'universal',
+  mode: 'spa',
   /*
   ** Headers of the page
   */
@@ -48,6 +48,9 @@ export default {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+      if (!!config.module) {
+        config.module.rules.push({test: /\.(vert|frag)$/i, use: ['raw-loader']})
+      }
     }
   }
 }

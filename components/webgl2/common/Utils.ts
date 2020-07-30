@@ -94,9 +94,9 @@ export function configureControls(settings: { [key: string]: any }, options: any
 
     let controller: GUIController
 
-    if(options) {
+    if (options) {
       controller = gui.add(state, key, options)
-    } else if(isColor(value)) {
+    } else if (isColor(value)) {
       controller = gui.addColor(state, key)
     } else {
       controller = gui.add(state, key, min, max, step)
@@ -104,4 +104,13 @@ export function configureControls(settings: { [key: string]: any }, options: any
 
     controller.onChange(v => onChange(v, state))
   })
+}
+
+
+export function normalizeColor(color: number[]) {
+  return color.map(c => c / 255)
+}
+
+export function denormalizeColor(color: number[]) {
+  return color.map(c => c * 255)
 }

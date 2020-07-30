@@ -11,12 +11,13 @@
   import { StateMachine } from '../components/webgl2/ch02/StateMachine'
   import { GoraudLambert } from '../components/webgl2/ch03/GoraudLambert'
   import { GoraudPhong } from '../components/webgl2/ch03/GoraudPhong'
+  import { PositionalLight } from '../components/webgl2/ch03/PositionalLight'
 
   @Component
   export default class extends Vue {
     mounted() {
       const canvas = document.getElementById('canvas') as HTMLCanvasElement
-      const sphere = new GoraudLambert(canvas)
+      new PositionalLight(canvas)
     }
   }
 </script>

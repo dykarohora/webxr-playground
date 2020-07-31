@@ -61,7 +61,7 @@ export function calculateNormals(vs: number[], ind: number[]) {
 }
 
 export function configureControls(settings: { [key: string]: any }, options: any = {width: 300}) {
-  const gui = new GUI()
+  const gui = options.gui || new GUI(options)
   const state: { [key: string]: any } = {}
 
   const isAction = (v: any) => typeof v === 'function'
@@ -77,7 +77,7 @@ export function configureControls(settings: { [key: string]: any }, options: any
     }
 
     if (isFolder(settingValue)) {
-
+      configureControls(settingValue, {gui: gui.addFolder(key)})
       return
     }
 

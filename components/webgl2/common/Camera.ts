@@ -32,11 +32,19 @@ export class Camera {
     this.update()
   }
 
+  /**
+   * 新しい値をセットする
+   * @param azimuth
+   */
   public setAzimuth(azimuth: number) {
     this.changeAzimuth(azimuth - this._azimuth)
   }
 
-  private changeAzimuth(azimuth: number) {
+  /**
+   * 現在の値に
+   * @param azimuth
+   */
+  public changeAzimuth(azimuth: number) {
     this._azimuth += azimuth
 
     if (this._azimuth > 360 || this._azimuth < -360) {
@@ -49,7 +57,7 @@ export class Camera {
     this.changeElevation(elevation - this._elevation)
   }
 
-  private changeElevation(elevation: number) {
+  public changeElevation(elevation: number) {
     this._elevation += elevation
     if (this._elevation > 360 || this._elevation < -360) {
       this._elevation = this._elevation % 360

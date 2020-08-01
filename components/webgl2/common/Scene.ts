@@ -13,7 +13,7 @@ export class Scene {
     return this.objects.find(object => object.alias === alias)
   }
 
-  public load(filename: string, alias: string) {
+  public load(filename: string, alias?: string) {
     return fetch(filename)
       .then(res => res.json())
       .then((object:IObject) => {
@@ -22,6 +22,16 @@ export class Scene {
         this.add(object)
       })
       .catch((err) => console.error(err, ...arguments))
+  }
+
+  public async loadByParts(path: string, count: number, alias?: string) {
+    const tasks: Promise<void>[] = []
+    for(let i=1; i<=count; i++) {
+      const part = `${path}${i}.json`
+      const task = this.load(part, alias)
+      tasks.push(task)
+    }
+    await Promise.all(tasks)
   }
 
   public add(object: IObject) {

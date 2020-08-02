@@ -17,6 +17,7 @@ export class ArBarebones {
       // TODO どうする？
     }
 
+
     //@ts-ignore
     if (navigator.xr) {
       this.xrButton.addEventListener('click', this.onButtonClicked)

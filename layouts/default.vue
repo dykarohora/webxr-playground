@@ -31,6 +31,7 @@
     private navItems: (SideBarItem)[] = [
       {name: 'Top', url: '/', icon: 'icon-speedometer', type: 'link'},
       {name: 'VR', type: 'title'},
+      {name: 'BareBones', url: '/vr/bare-bones', type: 'link'},
       {name: 'AR', type: 'title'},
     ]
   }

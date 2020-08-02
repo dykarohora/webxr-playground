@@ -16,6 +16,10 @@ export class Camera {
 
   private _matrix: mat4 = mat4.create()
 
+  public readonly fov = 45
+  public readonly minZ = 0.1
+  public readonly maxZ = 10000
+
   public constructor(private _cameraType: CameraType = 'ORBITING') {
 
   }

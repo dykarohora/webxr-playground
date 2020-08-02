@@ -11,8 +11,7 @@ export default {
       {hid: 'description', name: 'description', content: process.env.npm_package_description || ''}
     ],
     link: [
-      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
-      {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=PT+Sans:300,400,700,800'}
+      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
     ]
   },
   /*
@@ -23,8 +22,17 @@ export default {
   ** Global CSS
   */
   css: [
-    '~/css/reset.css',
-    '~/css/main.css'
+    /* Import Font Awesome Icons Set */
+    './node_modules/flag-icon-css/css/flag-icon.min.css',
+    /* Import Font Awesome Icons Set */
+    './node_modules/font-awesome/css/font-awesome.min.css',
+    /* Import Simple Line Icons Set */
+    './node_modules/simple-line-icons/css/simple-line-icons.css',
+    /* Import Bootstrap Vue Styles */
+    './node_modules/bootstrap-vue/dist/bootstrap-vue.css',
+    /* Import Core SCSS */
+    //@ts-ignore
+    {src: './assets/scss/style.scss', lang: 'scss'}
   ],
   /*
   ** Plugins to load before mounting the App
@@ -40,6 +48,9 @@ export default {
   modules: [
     'bootstrap-vue/nuxt'
   ],
+  styleResources: {
+    scss: './assets/scss/style.scss'
+  },
   /*
   ** Build configuration
   */

@@ -1,5 +1,5 @@
 {
-  "name": "nuxtjs-static-website",
+  "name": "Web XR Playground",
   "version": "1.0.0",
   "description": "My divine Nuxt.js project",
   "author": "Christian Nwamba",
@@ -9,12 +9,18 @@
     "build": "nuxt generate"
   },
   "dependencies": {
+    "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "dat.gui": "^0.7.7",
+    "flag-icon-css": "^3.5.0",
+    "font-awesome": "^4.7.0",
     "gl-matrix": "^3.3.0",
     "isomorphic-unfetch": "^3.0.0",
+    "node-sass": "^4.14.1",
     "nuxt": "^2.13.3",
     "nuxt-property-decorator": "^2.7.2",
+    "sass-loader": "^9.0.2",
+    "simple-line-icons": "2.4.1",
     "three": "^0.118.3",
     "type-result": "^0.9.5"
   },

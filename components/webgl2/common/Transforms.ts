@@ -22,6 +22,9 @@ export class Transforms {
     return this._modelViewMatrix
   }
 
+  /**
+   *
+   */
   public calculateModelView() {
     // Cameraはカメラ空間→ワールド空間への変換行列を持っている
     // getViewTransformはその逆行列を返す

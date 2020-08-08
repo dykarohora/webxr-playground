@@ -41,7 +41,7 @@ export class VrBareBones {
     this.gl = canvas.getContext('webgl', {xrCompatible: true}) as WebGLRenderingContext
 
     this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(this.xrSession, this.gl)})
-    this.xrSession.requestReferenceScope('local').then((refSpace) => {
+    this.xrSession.requestReferenceSpace('local').then((refSpace: XRReferenceSpace) => {
       this.xrRefSpace = refSpace
       this.xrSession?.requestAnimationFrame(this.onXRFrame)
     })

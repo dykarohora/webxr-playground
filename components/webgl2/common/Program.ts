@@ -27,22 +27,38 @@ export class Program {
     this.setUniformLocations(uniforms)
   }
 
+  /**
+   * WebGLProgramから引数で指定したattributeのそれぞれの位置を取得し、このオブジェクトにキャッシュする
+   * @param attributes
+   */
   private setAttributeLocations(attributes: string[]) {
     attributes.forEach(attribute => {
       this.attributes[attribute] = this.gl.getAttribLocation(this.program, attribute)
     })
   }
 
+  /**
+   * WebGLProgramから引数で指定したuniformのそれぞれの位置を取得し、このオブジェクトにキャッシュする
+   * @param uniforms
+   */
   private setUniformLocations(uniforms: string[]) {
     uniforms.forEach(uniform => {
       this.uniforms[uniform] = this.gl.getUniformLocation(this.program, uniform)!
     })
   }
 
+  /**
+   * 位置を指定してProgramオブジェクトに設定されている現在のUniformの値を取り出す
+   * @param uniformLocation
+   */
   public getUniform(uniformLocation: WebGLUniformLocation) {
     return this.gl.getUniform(this.program, uniformLocation)
   }
 
+  /**
+   * キャッシュしているattributeの位置を取り出す
+   * @param key
+   */
   public getAttributeLocation(key: string) {
     const attributeLocation = this.attributes[key]
 
@@ -53,6 +69,10 @@ export class Program {
     return attributeLocation
   }
 
+  /**
+   * キャッシュしているuniformの位置を取り出す
+   * @param key
+   */
   public getUniformLocation(key: string) {
     const uniformLocation = this.uniforms[key]
 

@@ -36,6 +36,11 @@ export class Camera {
     this.update()
   }
 
+  public setFocus(focus: vec3) {
+    vec3.copy(this.focus, focus)
+    this.update()
+  }
+
   /**
    * 新しい値をセットする
    * @param azimuth
@@ -115,6 +120,9 @@ export class Camera {
     vec3.copy(this.normal, normal.slice(0, 3) as [number, number, number])
   }
 
+  /**
+   * ワールド空間→カメラ空間への変換行列を取得する
+   */
   public getViewTransform() {
     // このクラスが持っている行列はカメラ空間→ワールド空間へ変換する行列
     // レンダリングパイプラインでは、ワールド空間→カメラ空間へ変換する行列がほしい

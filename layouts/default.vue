@@ -30,6 +30,8 @@
   export default class extends Vue {
     private navItems: (SideBarItem)[] = [
       {name: 'Top', url: '/', icon: 'icon-speedometer', type: 'link'},
+      {name: 'WebGL2', type: 'title'},
+      {name: 'Wall Light', url: '/webgl2/wall-light', type: 'link'},
       {name: 'VR', type: 'title'},
       {name: 'BareBones', url: '/vr/bare-bones', type: 'link'},
       {name: 'AR', type: 'title'},

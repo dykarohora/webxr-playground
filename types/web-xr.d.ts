@@ -15,7 +15,7 @@ interface XRSession extends EventTarget {
 
   updateRenderState(newState: XRRendoerStateInit): void
 
-  requestReferenceScope(type: XRReferenceSpaceType): Promise<XRReferenceSpace>
+  requestReferenceSpace(type: XRReferenceSpaceType): Promise<XRReferenceSpace>
 
   requestAnimationFrame(animationFrameCallback: (time: DOMHighResTimeStamp, xrFrame: XRFrame) => any): number
 }
@@ -46,7 +46,7 @@ interface XRWebGLLayer {
   readonly frameBufferHeight: any
   readonly ignoreDepthValues: any
 
-  getViewport(): any
+  getViewport(): XRViewport
 }
 
 interface XRReferenceSpace {
@@ -70,4 +70,27 @@ interface XRRenderState {
   readonly depthFar: number
   readonly depthNear: number
   readonly inlineVerticalFieldOfView: number | null
+}
+
+declare var XRRigidTransform: {
+  prototype: XRRigidTransform
+  new(position?: any, orientation?: any)
+}
+
+/**
+ * その名の通りTransformを表現している気がする
+ * matrixがローカル→ワールドなのか、その逆なのか気になる
+ */
+interface XRRigidTransform {
+  readonly position: DOMPointReadOnly
+  readonly orientation: DOMPointReadOnly
+  readonly matrix: Float32Array
+  readonly inverse: XRRigidTransform
+}
+
+interface XRViewport {
+  readonly height: number
+  readonly width: number
+  readonly x: number
+  readonly y: number
 }

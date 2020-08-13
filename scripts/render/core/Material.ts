@@ -1,5 +1,11 @@
+import { Texture } from './Texture'
+import { RenderPrimitive } from './RenderPrimirive'
+
 const GL = WebGLRenderingContext // For enums
 
+/**
+ * WebGLRenderingContext.enableで有効化するもの
+ */
 export const CAP = {
   // Enable caps
   CULL_FACE: 0x001,
@@ -11,6 +17,9 @@ export const CAP = {
   STENCIL_MASK: 0x040
 }
 
+/**
+ * アルファブレンディングとデプステスト
+ */
 export const MAT_STATE = {
   CAPS_RANGE: 0x000000FF,
   BLEND_SRC_SHIFT: 8,
@@ -22,6 +31,9 @@ export const MAT_STATE = {
   DEPTH_FUNC_RANGE: 0x000F0000
 }
 
+/**
+ * レンダリングオーダー
+ */
 export const RENDER_ORDER = {
   // Render opaque objects first.
   OPAQUE: 0,
@@ -38,30 +50,147 @@ export const RENDER_ORDER = {
 
   // Render order will be picked based on the material properties.
   DEFAULT: 4
-}
+} as const
 
-export class MaterialState {
-  public state: number
-  public blendFuncSrc: number
-  public blendFuncDst: number
-  public depthFunc: number
+export type RenderOrderKeys = keyof typeof RENDER_ORDER
+export type RenderOrderValues = typeof RENDER_ORDER[keyof typeof RENDER_ORDER]
 
-  public constructor() {
-    this.state = CAP.CULL_FACE | CAP.DEPTH_TEST | CAP.COLOR_MASK | CAP.DEPTH_MASK
-    this.blendFuncSrc = GL.SRC_ALPHA
-    this.blendFuncDst = GL.ONE_MINUS_SRC_ALPHA
-    this.depthFunc = GL.LESS
-  }
-}
+export abstract class Material {
+  protected _renderOrder: RenderOrderValues     // レンダリングの順序ラベル
+  protected _state: MaterialState               // アルファブレンド、デプステストの設定
+  protected _samplers: MaterialSampler[] = []   // テクスチャ
+  protected _uniforms: MaterialUniform[] = []   // パラメータ
 
-export class Material {
-  protected _renderOrder: number
-  protected _state: MaterialState
-  protected _samplers: any[] = []
-  protected _uniforms: any[] = []
-
-  public constructor() {
-    this._state = new MaterialState
+  protected constructor() {
+    this._state = new MaterialState()
     this._renderOrder = RENDER_ORDER.DEFAULT
   }
+
+  public defineSampler(uniformName: string, texture: Texture) {
+    let sampler = new MaterialSampler(uniformName, texture)
+    this._samplers.push(sampler)
+    return sampler
+  }
+
+  public defineUniform(uniformName: string, defaultValue: number[], length: number) {
+    let uniform = new MaterialUniform(uniformName, defaultValue, length)
+    this._uniforms.push(uniform)
+    return uniform
+  }
+
+  public get state() {
+    return this._state
+  }
+
+  public get renderOrder() {
+    return this._renderOrder
+  }
+
+  public get samplers() {
+    return this._samplers
+  }
+
+  public get uniforms() {
+    return this._uniforms
+  }
+
+  /**
+   * マテリアル名
+   */
+  public abstract get materialName(): string
+
+  /**
+   * 頂点シェーダ
+   */
+  public abstract get vertexSource(): string
+
+  /**
+   * フラグメントシェーダ
+   */
+  public abstract get fragmentSource(): string
+
+  public getProgramDefines(renderPrimitive: RenderPrimitive): any {
+    return {}
+  }
+}
+
+/**
+ * マテリアルのアルファブレンド、デプステストの設定を記述するオブジェクト
+ */
+export class MaterialState {
+  // このマテリアルで有効化する機能
+  // ビットフラグで表現されており、詳細はCAPをみること
+  public state: number
+  public blendFuncSrc: GLenum
+  public blendFuncDst: GLenum
+  public depthFunc: GLenum
+
+  public constructor() {
+    // デフォルトは
+    // カリングの有効化
+    // デプステストあり
+    // カラーマスクあり
+    // デプスマスクあり
+    this.state = CAP.CULL_FACE | CAP.DEPTH_TEST | CAP.COLOR_MASK | CAP.DEPTH_MASK
+
+    // アルファブレンディングの計算式は以下の通り
+    // Sc * Sa + Dc * (1 - Sa)
+    this.blendFuncSrc = GL.SRC_ALPHA
+    this.blendFuncDst = GL.ONE_MINUS_SRC_ALPHA
+
+    // デプステストは深度値が小さいもの、手前のものを成功とする
+    this.depthFunc = GL.LESS
+  }
+
+  public enableDepthMask() {
+    this.state |= CAP.DEPTH_MASK
+  }
+
+  public disableDepthMask() {
+    this.state &= ~CAP.DEPTH_MASK
+  }
+}
+
+/**
+ * シェーダとJSコードを結びつけるUniformを表すオブジェクト
+ * マテリアルのパラメータに相当する
+ */
+export class MaterialUniform {
+  public constructor(
+    public readonly uniformName: string,  // uniform名
+    private _value: number[],             // uniformを経由してシェーダに渡すデータセット
+    public readonly length: number        // uniformデータ1つあたりの要素の数
+  ) {}
+
+  public get value() {
+    return this._value
+  }
+
+  public setValue(value: number[]) {
+    if(value.length % this.length !== 0) {
+      throw new Error(`セットされたデータとlengthプロパティに不整合があります length property:${this.length} method argument:${value.length}`)
+    }
+    this._value = value
+  }
+}
+
+/**
+ * テクスチャとそれを紐づけるUniform名を保持するオブジェクト
+ */
+export class MaterialSampler {
+
+  public constructor(
+    private _uniformName: string, // uniform名
+    private _texture: Texture     // テクスチャのデータを保持するオブジェクト
+  ) {
+  }
+
+  public get texture() {
+    return this._texture
+  }
+
+  public get uniformName() {
+    return this._uniformName
+  }
+
 }

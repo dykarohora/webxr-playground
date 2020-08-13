@@ -3,17 +3,17 @@
  * イメージデータそのものはもたず、バインドしてデータ流し込み済みのWebGLTextureを持つ
  */
 export class RenderTexture {
-  private readonly _texture: WebGLTexture
+  private readonly _textureHandle: WebGLTexture         //テクスチャハンドル
   private _complete: boolean = false
   private _activeFrameId: number = 0
   private _activeCallback: Function | null = null
 
   public constructor(texture: WebGLTexture) {
-    this._texture = texture
+    this._textureHandle = texture
   }
 
-  public get texture() {
-    return this._texture
+  public get textureHandle() {
+    return this._textureHandle
   }
 
   public get complete() {

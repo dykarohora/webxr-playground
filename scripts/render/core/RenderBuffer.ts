@@ -1,32 +1,34 @@
+/**
+ * 頂点バッファやインデックスバッファをキャッシュするオブジェクト
+ */
 export class RenderBuffer {
+  // 頂点バッファかインデックスバッファか
+  // ARRAY_BUFFER | ELEMENT_ARRAY_BUFFER
   private _target: GLenum
-  private _usage: GLenum
-  private _length: number
-  private _buffer: WebGLBuffer | null
-  private readonly _promise: Promise<RenderBuffer>
 
-  public constructor(target: GLenum, usage: GLenum, buffer: WebGLBuffer | Promise<WebGLBuffer>, length: number = 0) {
+  // バッファの用途
+  // STATIC_DRAW
+  // DYNAMIC_DRAW
+  // STREAM_DRAW
+  private _usage: GLenum
+
+  // WebGLBufferがもつバッファのバイトサイズ
+  private _length: number
+
+  // バッファ本体、WebGLBuffer型
+  public readonly buffer: WebGLBuffer
+
+  /**
+   *
+   * @param target
+   * @param usage
+   * @param buffer
+   * @param length
+   */
+  public constructor(target: GLenum, usage: GLenum, buffer: WebGLBuffer, length: number = 0) {
     this._target = target
     this._usage = usage
     this._length = length
-
-    if (buffer instanceof Promise) {
-      this._buffer = null
-      this._promise = buffer.then(buffer => {
-        this._buffer = buffer
-        return this
-      })
-    } else {
-      this._buffer = buffer
-      this._promise = Promise.resolve(this)
-    }
-  }
-
-  public waitForComplete() {
-    return this._promise
-  }
-
-  public set length(value:number) {
-    this._length = value
+    this.buffer = buffer
   }
 }

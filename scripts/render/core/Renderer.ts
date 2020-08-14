@@ -118,7 +118,11 @@ export class Renderer {
    * RenderTextureはRendererにもハッシュマップでキャッシュしておく
    * @param texture
    */
-  public getRenderTexture(texture: Texture) {
+  public getRenderTexture(texture: Texture | null) {
+    if(texture === null) {
+      return null
+    }
+
     let key = texture.textureKey
 
     if (this._textureCache.has(key)) {
@@ -192,7 +196,7 @@ export class Renderer {
     }
   }
 
-  private getProgramKey(name: string, defines: any) {
+  private getProgramKey(name: string, defines: { [key: string]: number }) {
     let key = `${name}:`
 
     for (let define in defines) {

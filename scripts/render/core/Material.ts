@@ -67,13 +67,13 @@ export abstract class Material {
     this._renderOrder = RENDER_ORDER.DEFAULT
   }
 
-  public defineSampler(uniformName: string, texture: Texture) {
+  public defineSampler(uniformName: string, texture: Texture | null = null) {
     let sampler = new MaterialSampler(uniformName, texture)
     this._samplers.push(sampler)
     return sampler
   }
 
-  public defineUniform(uniformName: string, defaultValue: number[], length: number) {
+  public defineUniform(uniformName: string, defaultValue: number[], length: number = 0) {
     let uniform = new MaterialUniform(uniformName, defaultValue, length)
     this._uniforms.push(uniform)
     return uniform
@@ -110,7 +110,7 @@ export abstract class Material {
    */
   public abstract get fragmentSource(): string
 
-  public getProgramDefines(renderPrimitive: RenderPrimitive): any {
+  public getProgramDefines(renderPrimitive: RenderPrimitive): { [key: string]: number } {
     return {}
   }
 }
@@ -298,12 +298,16 @@ export class MaterialSampler {
 
   public constructor(
     private _uniformName: string, // uniform名
-    private _texture: Texture     // テクスチャのデータを保持するオブジェクト
+    private _texture: Texture | null = null     // テクスチャのデータを保持するオブジェクト
   ) {
   }
 
   public get texture() {
     return this._texture
+  }
+
+  public setTexture(texture: Texture) {
+    this._texture = texture
   }
 
   public get uniformName() {

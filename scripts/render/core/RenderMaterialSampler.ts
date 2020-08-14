@@ -7,9 +7,9 @@ import { RenderTexture } from './RenderTexture'
  */
 export class RenderMaterialSampler {
   private _renderer: Renderer
-  public readonly uniformName: string           // uniform名
-  public readonly renderTexture: RenderTexture  // テクスチャデータ
-  public readonly index: number                 // テクスチャのインデックス
+  public readonly uniformName: string                  // uniform名
+  public readonly renderTexture: RenderTexture | null  // テクスチャデータ
+  public readonly index: number                        // テクスチャのインデックス
 
   public constructor(renderer: Renderer, materialSampler: MaterialSampler, index: number) {
     this._renderer = renderer

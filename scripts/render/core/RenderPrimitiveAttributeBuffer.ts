@@ -17,4 +17,8 @@ export class RenderPrimitiveAttributeBuffer {
   public pushRenderPrimitiveAttribute(renderPrimitiveAttribute: RenderPrimitiveAttribute) {
     this.attributes.push(renderPrimitiveAttribute)
   }
+
+  public get webglBuffer() {
+    return this.buffer.buffer
+  }
 }

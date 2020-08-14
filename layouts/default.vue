@@ -34,6 +34,7 @@
       {name: 'Wall Light', url: '/webgl2/wall-light', type: 'link'},
       {name: 'VR', type: 'title'},
       {name: 'BareBones', url: '/vr/bare-bones', type: 'link'},
+      {name: 'Immersive VR Session', url: '/vr/immersive-vr-session', type: 'link'},
       {name: 'AR', type: 'title'},
     ]
   }

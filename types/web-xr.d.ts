@@ -46,7 +46,7 @@ interface XRWebGLLayer {
   readonly frameBufferHeight: any
   readonly ignoreDepthValues: any
 
-  getViewport(): XRViewport
+  getViewport(view: XRView): XRViewport
 }
 
 interface XRReferenceSpace {
@@ -62,7 +62,7 @@ interface XRFrame {
 }
 
 interface XRViewerPose {
-
+  readonly views: XRView[]
 }
 
 interface XRRenderState {
@@ -93,4 +93,10 @@ interface XRViewport {
   readonly width: number
   readonly x: number
   readonly y: number
+}
+
+interface XRView {
+  readonly eye: any
+  readonly projectionMatrix: any
+  readonly transform: XRRigidTransform
 }

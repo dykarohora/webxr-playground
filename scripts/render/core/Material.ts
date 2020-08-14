@@ -1,5 +1,6 @@
 import { Texture } from './Texture'
 import { RenderPrimitive } from './RenderPrimitive'
+import { stateToBlendFunc } from './RenderMaterial'
 
 const GL = WebGLRenderingContext // For enums
 
@@ -121,9 +122,6 @@ export class MaterialState {
   // このマテリアルで有効化する機能
   // ビットフラグで表現されており、詳細はCAPをみること
   public stateFlags: number
-  public blendFuncSrc: GLenum
-  public blendFuncDst: GLenum
-  public depthFunc: GLenum
 
   public constructor() {
     // デフォルトは
@@ -135,19 +133,137 @@ export class MaterialState {
 
     // アルファブレンディングの計算式は以下の通り
     // Sc * Sa + Dc * (1 - Sa)
-    this.blendFuncSrc = GL.SRC_ALPHA
-    this.blendFuncDst = GL.ONE_MINUS_SRC_ALPHA
+    this.setBlendFuncSrc(GL.SRC_ALPHA)
+    this.setBlendFuncDst(GL.ONE_MINUS_SRC_ALPHA)
 
     // デプステストは深度値が小さいもの、手前のものを成功とする
-    this.depthFunc = GL.LESS
+    this.setDepthFunc(GL.LESS)
   }
 
-  public enableDepthMask() {
-    this.stateFlags |= CAP.DEPTH_MASK
+  public get cullFace() {
+    return !!(this.stateFlags & CAP.CULL_FACE)
   }
 
-  public disableDepthMask() {
-    this.stateFlags &= ~CAP.DEPTH_MASK
+  public setCullFace(value: GLenum) {
+    if (value) {
+      this.stateFlags |= CAP.CULL_FACE
+    } else {
+      this.stateFlags &= ~CAP.CULL_FACE
+    }
+  }
+
+  public get blend() {
+    return !!(this.stateFlags & CAP.BLEND)
+  }
+
+  public setBlend(value: GLenum) {
+    if (value) {
+      this.stateFlags |= CAP.BLEND
+    } else {
+      this.stateFlags &= ~CAP.BLEND
+    }
+  }
+
+  public get depthTest() {
+    return !!(this.stateFlags & CAP.DEPTH_TEST)
+  }
+
+  public setDepthTest(value: GLenum) {
+    if (value) {
+      this.stateFlags |= CAP.DEPTH_TEST
+    } else {
+      this.stateFlags &= ~CAP.DEPTH_TEST
+    }
+  }
+
+  public get stencilTest() {
+    return !!(this.stateFlags & CAP.STENCIL_TEST)
+  }
+
+  public setStencilTest(value: GLenum) {
+    if (value) {
+      this.stateFlags |= CAP.STENCIL_TEST
+    } else {
+      this.stateFlags &= ~CAP.STENCIL_TEST
+    }
+  }
+
+  public get colorMask() {
+    return !!(this.stateFlags & CAP.COLOR_MASK)
+  }
+
+  public setColorMask(value: GLenum) {
+    if (value) {
+      this.stateFlags |= CAP.COLOR_MASK
+    } else {
+      this.stateFlags &= ~CAP.COLOR_MASK
+    }
+  }
+
+  public get depthMask() {
+    return !!(this.stateFlags & CAP.DEPTH_MASK)
+  }
+
+  public setDepthMask(value: boolean) {
+    if (value) {
+      this.stateFlags |= CAP.DEPTH_MASK
+    } else {
+      this.stateFlags &= ~CAP.DEPTH_MASK
+    }
+  }
+
+  public get depthFunc() {
+    return ((this.stateFlags & MAT_STATE.DEPTH_FUNC_RANGE) >> MAT_STATE.DEPTH_FUNC_SHIFT) + GL.NEVER
+  }
+
+  public setDepthFunc(value: GLenum) {
+    value = value - GL.NEVER
+    this.stateFlags &= ~MAT_STATE.DEPTH_FUNC_RANGE
+    this.stateFlags |= (value << MAT_STATE.DEPTH_FUNC_SHIFT)
+  }
+
+  public get stencilMask() {
+    return !!(this.stateFlags & CAP.STENCIL_MASK)
+  }
+
+  public setStencilMask(value: boolean) {
+    if (value) {
+      this.stateFlags |= CAP.STENCIL_MASK
+    } else {
+      this.stateFlags &= ~CAP.STENCIL_MASK
+    }
+  }
+
+  public get blendFuncSrc() {
+    return stateToBlendFunc(this.stateFlags, MAT_STATE.BLEND_SRC_RANGE, MAT_STATE.BLEND_SRC_SHIFT)
+  }
+
+  public setBlendFuncSrc(value: GLenum) {
+    switch (value) {
+      case 0:
+      case 1:
+        break
+      default:
+        value = (value - GL.SRC_COLOR) + 2
+    }
+    this.stateFlags &= ~MAT_STATE.BLEND_SRC_RANGE
+    this.stateFlags |= (value << MAT_STATE.BLEND_SRC_SHIFT)
+  }
+
+  public get blendFuncDst() {
+    return stateToBlendFunc(this.stateFlags, MAT_STATE.BLEND_DST_RANGE, MAT_STATE.BLEND_DST_SHIFT)
+  }
+
+  public setBlendFuncDst(value: GLenum) {
+    switch (value) {
+      case 0:
+      case 1:
+        break
+      default:
+        value = (value - GL.SRC_COLOR) + 2
+    }
+    this.stateFlags &= ~MAT_STATE.BLEND_DST_RANGE
+    this.stateFlags |= (value << MAT_STATE.BLEND_DST_SHIFT)
   }
 }
 
@@ -160,14 +276,15 @@ export class MaterialUniform {
     public readonly uniformName: string,  // uniform名
     private _value: number[],             // uniformを経由してシェーダに渡すデータセット
     public readonly length: number        // uniformデータ1つあたりの要素の数
-  ) {}
+  ) {
+  }
 
   public get value() {
     return this._value
   }
 
   public setValue(value: number[]) {
-    if(value.length % this.length !== 0) {
+    if (value.length % this.length !== 0) {
       throw new Error(`セットされたデータとlengthプロパティに不整合があります length property:${this.length} method argument:${value.length}`)
     }
     this._value = value

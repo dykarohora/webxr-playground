@@ -1,13 +1,21 @@
-import { ATTRIB } from '../../scripts/render/core/RenderPrimitiveAttribute'
+import { Renderer } from '../../scripts/render/core/Renderer'
+import { Scene } from '../../scripts/render/scene/Scene'
+import { SkyboxNode } from '../../scripts/render/nodes/sky-box/SkyBox'
 
-export class VrBareBones {
+const GL = WebGLRenderingContext
+
+export class ImmersiveVR {
   private xrSession: XRSession | null = null
   private xrButton: HTMLButtonElement
   private xrRefSpace: XRReferenceSpace | null = null
   private gl: WebGLRenderingContext | null = null
+  private renderer: Renderer | null = null
+  private scene: Scene
 
   public constructor(button: HTMLButtonElement) {
     this.xrButton = button
+    this.scene = new Scene()
+    this.scene.addNode(new SkyboxNode({url: '../media/textures/milky-way-4k.png'}))
   }
 
   public initXR() {
@@ -33,7 +41,7 @@ export class VrBareBones {
     }
   }
 
-  private onSessionStarted = (session: XRSession) => {
+  private onSessionStarted = async (session: XRSession) => {
     this.xrSession = session
     this.xrButton.textContent = 'Exit VR'
 
@@ -42,10 +50,13 @@ export class VrBareBones {
     const canvas = document.createElement('canvas')
     this.gl = canvas.getContext('webgl', {xrCompatible: true}) as WebGLRenderingContext
 
-    this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(this.xrSession, this.gl)})
+    this.renderer = new Renderer(this.gl)
+    this.scene.setRenderer(this.renderer)
+
+    this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(session, this.gl)})
     this.xrSession.requestReferenceSpace('local').then((refSpace: XRReferenceSpace) => {
       this.xrRefSpace = refSpace
-      this.xrSession?.requestAnimationFrame(this.onXRFrame)
+      session.requestAnimationFrame(this.onXRFrame)
     })
   }
 
@@ -57,17 +68,30 @@ export class VrBareBones {
 
   private onXRFrame = (time: DOMHighResTimeStamp, frame: XRFrame) => {
     const session = frame.session
+
+    this.scene.startFrame()
+
     session.requestAnimationFrame(this.onXRFrame)
 
     let pose = frame.getViewerPose(this.xrRefSpace!)
 
     if (pose) {
       let glLayer = session.renderState.baseLayer
+
       this.gl!.bindFramebuffer(this.gl!.FRAMEBUFFER, glLayer.framebuffer)
-      this.gl!.clearColor(Math.cos(time / 2000),
-        Math.cos(time / 4000),
-        Math.cos(time / 6000), 1.0)
       this.gl!.clear(this.gl!.COLOR_BUFFER_BIT | this.gl!.DEPTH_BUFFER_BIT)
+
+      for (let view of pose.views) {
+        let viewport = glLayer.getViewport(view)
+        this.gl!.viewport(viewport.x, viewport.y, viewport.width, viewport.height)
+        this.scene.draw(view.projectionMatrix, view.transform)
+      }
+    } else {
+
     }
+
+    this.scene.endFrame()
   }
 }
+
+const timer = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))

@@ -114,7 +114,7 @@ export class RenderPrimitive {
   }
 
   public get indexBuffer() {
-    return this._indexBuffer
+    return this._indexBuffer.buffer
   }
 
   public get indexByteOffset() {

@@ -1,15 +1,49 @@
 import { Node } from '../../core/Node'
 import { Renderer } from '../../core/Renderer'
-import { Primitive, PrimitiveAttribute } from '../../core/Primitive'
-import { Material, RENDER_ORDER } from '../../core/Material'
+import { Primitive } from '../../core/Primitive'
+import { Material, MaterialSampler, MaterialUniform, RENDER_ORDER } from '../../core/Material'
+
+import vertexShaderStr from './skybox.vert'
+import fragmentShaderStr from './skybox.frag'
+import { Texture, UrlTexture } from '../../core/Texture'
+import { PrimitiveAttribute } from '../../core/PrimitiveAttribute'
 
 const GL = WebGLRenderingContext
 
 class SkyboxMaterial extends Material {
-  public constructor() {
-    super();
-    this._renderOrder = RENDER_ORDER.SKY
-    this._state.depthFunc = GL.LEQUAL
+  private readonly _image: MaterialSampler
+  private _texCoordScaleOffset: MaterialUniform
+
+  public constructor(texture: Texture) {
+    super()
+    this._renderOrder = RENDER_ORDER.SKY  // スカイボックスなのではやめに描画する
+    this._state.setDepthFunc(GL.LEQUAL)
+    this._state.setDepthMask(false)
+
+    this._image = this.defineSampler('diffuse', texture)
+    this._texCoordScaleOffset = this.defineUniform('texCoordScaleOffset',
+      [1.0, 1.0, 0.0, 0.0,
+        1.0, 1.0, 0.0, 0.0], 4)
+  }
+
+  public get materialName() {
+    return 'SKYBOX'
+  }
+
+  public get vertexSource() {
+    return vertexShaderStr
+  }
+
+  public get fragmentSource() {
+    return fragmentShaderStr
+  }
+
+  public get image() {
+    return this._image
+  }
+
+  public setTexCoordScaleOffset(value: number[]) {
+    this._texCoordScaleOffset.setValue(value)
   }
 }
 
@@ -18,11 +52,14 @@ export class SkyboxNode extends Node {
   private _displayMode: string = 'mono'
   private _rotationY: number = 0
 
-  public constructor(options?: SkyboxOption) {
+  public constructor(options: SkyboxOption) {
     super()
+    this._url = options.url
+    this._displayMode = options.displayMode ?? 'mono'
+    this._rotationY = options.rotationY ?? 0
   }
 
-  protected onRendererChanged(renderer: Renderer) {
+  protected async onRendererChanged(renderer: Renderer) {
     let vertices: number[] = []
     let indices: number[] = []
 
@@ -52,7 +89,7 @@ export class SkyboxNode extends Node {
 
         vertices.push(x, y, z, u, v)
 
-        if (i < latSegments && i < lonSegments) {
+        if (i < latSegments && j < lonSegments) {
           let idxA = idxOffsetA + j
           let idxB = idxOffsetB + j
 
@@ -69,18 +106,43 @@ export class SkyboxNode extends Node {
     // 最初の12バイトが頂点 残り8バイトがUV座標となる
     let attribs = [
       new PrimitiveAttribute('POSITION', vertexBuffer, 3, GL.FLOAT, 20, 0),
-      new PrimitiveAttribute('TEXCOORD_0', vertexBuffer, 2, GL.FLOAT, 20, 12),
+      new PrimitiveAttribute('TEXCOORD_0', vertexBuffer, 2, GL.FLOAT, 20, 12)
     ]
 
-    let primitive = new Primitive(attribs, indices.length)
-    primitive.setIndexBuffer(indexBuffer)
+    let primitive = new Primitive(attribs, {
+      count: indices.length,
+      buffer: indexBuffer,
+      offset: 0,
+      type: GL.UNSIGNED_SHORT,
+      mode: GL.TRIANGLES
+    })
 
-    let material = new SkyboxMaterial()
+    const texture = new UrlTexture(this._url)
+    await texture.waitForComplete()
+    let material = new SkyboxMaterial(texture)
+
+    switch (this._displayMode) {
+      case 'mono':
+        material.setTexCoordScaleOffset([1.0, 1.0, 0.0, 0.0,
+          1.0, 1.0, 0.0, 0.0])
+        break
+      case 'stereoTopBottom':
+        material.setTexCoordScaleOffset([1.0, 0.5, 0.0, 0.0,
+          1.0, 0.5, 0.0, 0.5])
+        break
+      case 'stereoLeftRight':
+        material.setTexCoordScaleOffset([0.5, 1.0, 0.0, 0.0,
+          0.5, 1.0, 0.5, 0.0])
+        break
+    }
+
+    let renderPrimitive = renderer.createRenderPrimitive(primitive, material)
+    this.addRenderPrimitive(renderPrimitive)
   }
 }
 
 export interface SkyboxOption {
-  url?: string
+  url: string
   displayMode?: string
   rotationY?: number
 }

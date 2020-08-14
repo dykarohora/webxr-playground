@@ -30,6 +30,7 @@
     "@types/dat.gui": "^0.7.5",
     "@types/gl-matrix": "^2.4.5",
     "raw-loader": "^4.0.1",
+    "serve": "^11.3.2",
     "ts-node-dev": "^1.0.0-pre.55",
     "typescript": "^3.9.7"
   }

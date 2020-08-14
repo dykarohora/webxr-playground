@@ -1,5 +1,5 @@
 import { Renderer } from './Renderer'
-import { CAP, MAT_STATE, Material, MaterialSampler, RENDER_ORDER, RenderOrderValues } from './Material'
+import { CAP, MAT_STATE, Material, RENDER_ORDER, RenderOrderValues } from './Material'
 import { Program } from './Program'
 import { RenderMaterialSampler } from './RenderMaterialSampler'
 import { RenderMaterialUniform } from './RenderMaterialUniform'
@@ -118,16 +118,45 @@ export class RenderMaterial {
     }
   }
 
-  public get depthFunc() {
+  // Material State fetchers
+  get cullFace() {
+    return !!(this._state & CAP.CULL_FACE)
+  }
+
+  get blend() {
+    return !!(this._state & CAP.BLEND)
+  }
+
+  get depthTest() {
+    return !!(this._state & CAP.DEPTH_TEST)
+  }
+
+  get stencilTest() {
+    return !!(this._state & CAP.STENCIL_TEST)
+  }
+
+  get colorMask() {
+    return !!(this._state & CAP.COLOR_MASK)
+  }
+
+  get depthMask() {
+    return !!(this._state & CAP.DEPTH_MASK)
+  }
+
+  get stencilMask() {
+    return !!(this._state & CAP.STENCIL_MASK)
+  }
+
+  get depthFunc() {
     return ((this._state & MAT_STATE.DEPTH_FUNC_RANGE) >> MAT_STATE.DEPTH_FUNC_SHIFT) + GL.NEVER
   }
 
-  public get blendFuncSrc() {
+  get blendFuncSrc() {
     return stateToBlendFunc(this._state, MAT_STATE.BLEND_SRC_RANGE, MAT_STATE.BLEND_SRC_SHIFT)
   }
 
-  public get blendFuncDst() {
-    return stateToBlendFunc(this._state, MAT_STATE.BLEND_DST_RANGE, MAT_STATE.BLEND_SRC_SHIFT)
+  get blendFuncDst() {
+    return stateToBlendFunc(this._state, MAT_STATE.BLEND_DST_RANGE, MAT_STATE.BLEND_DST_SHIFT)
   }
 
   public capsDiff(otherState: number) {
@@ -150,13 +179,13 @@ export class RenderMaterial {
   }
 
   public markActive(frameId: number) {
-    if(this._activeFrameId != frameId) {
+    if (this._activeFrameId != frameId) {
       this._activeFrameId = frameId
       this._completeForActiveFrame = true
-      for(let i=0 ; i<this._samplers.length; i++) {
+      for (let i = 0; i < this._samplers.length; i++) {
         const sampler = this._samplers[i]
-        if(sampler.renderTexture) {
-          if(!sampler.renderTexture.complete) {
+        if (sampler.renderTexture) {
+          if (!sampler.renderTexture.complete) {
             this._completeForActiveFrame = false
             break
           }

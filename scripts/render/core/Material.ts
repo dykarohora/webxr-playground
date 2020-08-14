@@ -1,5 +1,5 @@
 import { Texture } from './Texture'
-import { RenderPrimitive } from './RenderPrimirive'
+import { RenderPrimitive } from './RenderPrimitive'
 
 const GL = WebGLRenderingContext // For enums
 
@@ -78,8 +78,8 @@ export abstract class Material {
     return uniform
   }
 
-  public get state() {
-    return this._state
+  public get stateFlags() {
+    return this._state.stateFlags
   }
 
   public get renderOrder() {
@@ -120,7 +120,7 @@ export abstract class Material {
 export class MaterialState {
   // このマテリアルで有効化する機能
   // ビットフラグで表現されており、詳細はCAPをみること
-  public state: number
+  public stateFlags: number
   public blendFuncSrc: GLenum
   public blendFuncDst: GLenum
   public depthFunc: GLenum
@@ -131,7 +131,7 @@ export class MaterialState {
     // デプステストあり
     // カラーマスクあり
     // デプスマスクあり
-    this.state = CAP.CULL_FACE | CAP.DEPTH_TEST | CAP.COLOR_MASK | CAP.DEPTH_MASK
+    this.stateFlags = CAP.CULL_FACE | CAP.DEPTH_TEST | CAP.COLOR_MASK | CAP.DEPTH_MASK
 
     // アルファブレンディングの計算式は以下の通り
     // Sc * Sa + Dc * (1 - Sa)
@@ -143,11 +143,11 @@ export class MaterialState {
   }
 
   public enableDepthMask() {
-    this.state |= CAP.DEPTH_MASK
+    this.stateFlags |= CAP.DEPTH_MASK
   }
 
   public disableDepthMask() {
-    this.state &= ~CAP.DEPTH_MASK
+    this.stateFlags &= ~CAP.DEPTH_MASK
   }
 }
 

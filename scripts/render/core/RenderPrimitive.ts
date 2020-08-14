@@ -150,10 +150,7 @@ export class RenderPrimitive {
     this._material = material
     this._promise = null
     this._complete = false
-
-    if (this._material !== null) {
-      this.waitForComplete()
-    }
+    this.waitForComplete()
   }
 
   private waitForComplete() {

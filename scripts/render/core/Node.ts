@@ -1,12 +1,46 @@
 import { Renderer } from './Renderer'
+import { RenderPrimitive } from './RenderPrimitive'
+import { mat4 } from 'gl-matrix'
 
 export abstract class Node {
   protected children: Node[] = []
   protected parent: Node | null = null
+  protected _visible = true
   protected _renderer: Renderer | null = null
-  protected _renderPrimitives: any = null
+  protected _renderPrimitives: RenderPrimitive[] = []
+  protected _activeFrameId = -1
+
+  protected _worldMatrix!: mat4
 
   public constructor() {
+  }
+
+  public get visible() {
+    return this._visible
+  }
+
+  // TODO これなにやっているかよくわからないなあ
+  public markActive(frameId: number) {
+    if (this._visible && this._renderPrimitives.length !== 0) {
+      this._activeFrameId = frameId
+      for(const primitive of this._renderPrimitives) {
+        primitive.markActive(frameId)
+      }
+    }
+
+    for(const child of this.children) {
+      if(child._visible) {
+        child.markActive(frameId)
+      }
+    }
+  }
+
+  public get worldMatrix() {
+    if (this._worldMatrix === undefined || this._worldMatrix === null) {
+      this._worldMatrix = mat4.create()
+    }
+
+    return this._worldMatrix
   }
 
   /**
@@ -44,11 +78,11 @@ export abstract class Node {
   }
 
   public _setRenderer(renderer: Renderer) {
-    if(this._renderer === renderer) {
+    if (this._renderer === renderer) {
       return
     }
 
-    if(this._renderer !== null) {
+    if (this._renderer !== null) {
       this.clearRenderPrimitives()
     }
 
@@ -56,14 +90,19 @@ export abstract class Node {
 
     this.onRendererChanged(renderer)
 
-    for(let child of this.children) {
+    for (let child of this.children) {
       child._setRenderer(renderer)
     }
   }
 
   protected abstract onRendererChanged(renderer: Renderer): void
 
+  protected addRenderPrimitive(primitive: RenderPrimitive) {
+    this._renderPrimitives.push(primitive)
+    primitive.instances.push(this)
+  }
+
   private clearRenderPrimitives() {
-    // TODO
+    // TODO やらなくて大丈夫
   }
 }

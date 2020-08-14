@@ -23,21 +23,14 @@ ATTRIB_MAP.set('COLOR_0', 6)
 export type AttributeType = keyof typeof ATTRIB
 export type AttributeValues = typeof ATTRIB[keyof typeof ATTRIB]
 
-export const ATTRIB_KEYS: [
+export const ATTRIB_KEYS = [
   'POSITION',
   'NORMAL',
   'TANGENT',
   'TEXCOORD_0',
   'TEXCOORD_1',
   'COLOR_0'
-] = [
-  'POSITION',
-  'NORMAL',
-  'TANGENT',
-  'TEXCOORD_0',
-  'TEXCOORD_1',
-  'COLOR_0'
-]
+] as const
 
 /**
  * attributeをシェーダと紐づけるためのオブジェクト

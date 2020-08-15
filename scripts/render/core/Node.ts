@@ -2,7 +2,7 @@ import { Renderer } from './Renderer'
 import { RenderPrimitive } from './RenderPrimitive'
 import { mat4 } from 'gl-matrix'
 
-export abstract class Node {
+export class Node {
   protected children: Node[] = []
   protected parent: Node | null = null
   protected _visible = true
@@ -95,9 +95,10 @@ export abstract class Node {
     }
   }
 
-  protected abstract onRendererChanged(renderer: Renderer): void
+  protected onRendererChanged(renderer: Renderer) {
+  }
 
-  protected addRenderPrimitive(primitive: RenderPrimitive) {
+  public addRenderPrimitive(primitive: RenderPrimitive) {
     this._renderPrimitives.push(primitive)
     primitive.instances.push(this)
   }

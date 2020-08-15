@@ -21,6 +21,7 @@
 
 import { Material, MaterialSampler, MaterialUniform } from '../core/Material'
 import { ATTRIB_MASK, RenderPrimitive } from '../core/RenderPrimitive'
+import { vec3, vec4 } from 'gl-matrix'
 
 const VERTEX_SOURCE = `
 attribute vec3 POSITION, NORMAL;
@@ -289,5 +290,9 @@ export class PbrMaterial extends Material {
     }
 
     return programDefines
+  }
+
+  public setBaseColor(color: vec4) {
+    this.baseColorFactor.setValue(color)
   }
 }

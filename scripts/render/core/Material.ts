@@ -73,7 +73,7 @@ export abstract class Material {
     return sampler
   }
 
-  public defineUniform(uniformName: string, defaultValue: number[], length: number = 0) {
+  public defineUniform(uniformName: string, defaultValue: number[], length: number = defaultValue.length) {
     let uniform = new MaterialUniform(uniformName, defaultValue, length)
     this._uniforms.push(uniform)
     return uniform
@@ -274,7 +274,7 @@ export class MaterialState {
 export class MaterialUniform {
   public constructor(
     public readonly uniformName: string,  // uniform名
-    private _value: number[],             // uniformを経由してシェーダに渡すデータセット
+    private _value: number[] | Float32Array,             // uniformを経由してシェーダに渡すデータセット
     public readonly length: number        // uniformデータ1つあたりの要素の数
   ) {
   }
@@ -283,7 +283,7 @@ export class MaterialUniform {
     return this._value
   }
 
-  public setValue(value: number[]) {
+  public setValue(value: number[] | Float32Array) {
     if (value.length % this.length !== 0) {
       throw new Error(`セットされたデータとlengthプロパティに不整合があります length property:${this.length} method argument:${value.length}`)
     }

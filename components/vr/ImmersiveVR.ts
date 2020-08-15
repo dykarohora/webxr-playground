@@ -1,6 +1,9 @@
 import { Renderer } from '../../scripts/render/core/Renderer'
 import { Scene } from '../../scripts/render/scene/Scene'
+import { Node } from '../../scripts/render/core/Node'
 import { SkyboxNode } from '../../scripts/render/nodes/sky-box/SkyBox'
+import { BoxBuilder } from '../../scripts/render/geometry/BoxBuilder'
+import { PbrMaterial } from '../../scripts/render/material/pbr'
 
 const GL = WebGLRenderingContext
 
@@ -52,6 +55,17 @@ export class ImmersiveVR {
 
     this.renderer = new Renderer(this.gl)
     this.scene.setRenderer(this.renderer)
+
+    const boxBuilder = new BoxBuilder()
+    boxBuilder.pushCube([0, 0, 0], 0.4)
+    const boxPrimitive = boxBuilder.finishPrimitive(this.renderer)
+
+    const boxMaterial = new PbrMaterial()
+    boxMaterial.setBaseColor([1.0, 1.0, 1.0, 1.0])
+    const boxRenderPrimitive = this.renderer.createRenderPrimitive(boxPrimitive, boxMaterial)
+    const boxNode = new Node()
+    boxNode.addRenderPrimitive(boxRenderPrimitive)
+    this.scene.addNode(boxNode)
 
     this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(session, this.gl)})
     this.xrSession.requestReferenceSpace('local').then((refSpace: XRReferenceSpace) => {

@@ -93,7 +93,7 @@ export class RenderMaterial {
     for (let sampler of this._samplers) {
       // テクスチャの有効化
       gl.activeTexture(gl.TEXTURE0 + sampler.index)
-      if (sampler.renderTexture && sampler.renderTexture.complete) {
+      if (sampler.renderTexture !== null && sampler.renderTexture.complete) {
         gl.bindTexture(gl.TEXTURE_2D, sampler.renderTexture.textureHandle)
       } else {
         gl.bindTexture(gl.TEXTURE_2D, null)

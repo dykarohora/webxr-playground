@@ -65,6 +65,7 @@ export class ImmersiveVR {
     const boxRenderPrimitive = this.renderer.createRenderPrimitive(boxPrimitive, boxMaterial)
     const boxNode = new Node()
     boxNode.addRenderPrimitive(boxRenderPrimitive)
+    boxNode.translate([0.0, 0.0, -1.0])
     this.scene.addNode(boxNode)
 
     this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(session, this.gl)})

@@ -1,6 +1,8 @@
 import { Renderer } from './Renderer'
 import { RenderPrimitive } from './RenderPrimitive'
-import { mat4 } from 'gl-matrix'
+import { mat4, vec3 } from 'gl-matrix'
+
+const tmpRayMatrix = mat4.create()
 
 export class Node {
   protected children: Node[] = []
@@ -41,6 +43,11 @@ export class Node {
     }
 
     return this._worldMatrix
+  }
+
+  public translate(vec: vec3) {
+    const worldMatrix = this.worldMatrix
+    mat4.translate(worldMatrix, worldMatrix, vec)
   }
 
   /**

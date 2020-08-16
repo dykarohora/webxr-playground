@@ -4,7 +4,7 @@
     <div class="app-body">
       <side-bar :nav-items="navItems"/>
         <main class="main">
-          <div class="container-fluid">
+          <div class="container-fluid m-0 p-0">
             <nuxt/>
           </div>
         </main>
@@ -34,8 +34,13 @@
       {name: 'Wall Light', url: '/webgl2/wall-light', type: 'link'},
       {name: 'VR', type: 'title'},
       {name: 'BareBones', url: '/vr/bare-bones', type: 'link'},
-      {name: 'Immersive VR Session', url: '/vr/immersive-vr-session', type: 'link'},
+      {name: 'Cosmic Cube', url: '/vr/immersive-vr-session', type: 'link'},
       {name: 'AR', type: 'title'},
+      {name: 'Ray Marching', type: 'title'},
+      {name: 'FirstRayMarching', url: '/ray-marching/', type: 'link'},
+      {name: 'Sphere', url: '/ray-marching/sphere', type: 'link'},
+      {name: 'Repeatition Sphere', url: '/ray-marching/repeatition-sphere', type: 'link'},
+      {name: 'Box', url: '/ray-marching/box', type: 'link'}
     ]
   }
 </script>

@@ -16,6 +16,7 @@ export function compileShader(gl: WebGL2RenderingContext, shaderString: string, 
   gl.compileShader(shader)
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.log(gl.getShaderInfoLog(shader))
     throw new Error('Failed Shader Compile')
   }
 

@@ -1,13 +1,24 @@
 <template>
-$END$
+  <div>
+    <canvas id="canvas"/>
+  </div>
 </template>
 
-<script>
-export default {
-name: "bloom"
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop, Watch } from 'nuxt-property-decorator'
+//@ts-ignore
+import fragmentShaderSource from '../../components/ray-marching/shader/bloom.frag'
+import { RayMarchingBase } from '../../components/ray-marching/RayMarchingBase'
+
+@Component
+export default class extends Vue {
+  mounted() {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement
+    const rayMarching = new RayMarchingBase(canvas, fragmentShaderSource)
+    rayMarching.startRender()
+  }
+
 }
 </script>
 
-<style scoped>
-
-</style>

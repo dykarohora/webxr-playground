@@ -8,7 +8,7 @@
 import Vue from 'vue'
 import { Component, Prop, Watch } from 'nuxt-property-decorator'
 //@ts-ignore
-import fragmentShaderSource from '../../components/ray-marching/shader/torus.frag'
+import fragmentShaderSource from '../../components/ray-marching/shader/reflect.frag'
 import { RayMarchingBase } from '../../components/ray-marching/RayMarchingBase'
 
 @Component

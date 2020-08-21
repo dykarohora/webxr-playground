@@ -40,7 +40,9 @@
       {name: 'FirstRayMarching', url: '/ray-marching/', type: 'link'},
       {name: 'Sphere', url: '/ray-marching/sphere', type: 'link'},
       {name: 'Repeatition Sphere', url: '/ray-marching/repeatition-sphere', type: 'link'},
-      {name: 'Box', url: '/ray-marching/box', type: 'link'}
+      {name: 'Box', url: '/ray-marching/box', type: 'link'},
+      {name: 'Reflect', url: '/ray-marching/reflect', type: 'link'},
+      {name: 'Bloom', url: '/ray-marching/bloom', type: 'link'}
     ]
   }
 </script>

@@ -19,7 +19,7 @@ float sphere(vec3 p) {
 }
 
 float box(vec3 p) {
-  return length(max(abs(p) - vec3(0.1, 0.5, 0.5), 0.0)) - 0.1;
+  return length(max(abs(p) - vec3(0.1, 0.5, 0.5), 0.0)) ;
 }
 
 float distanceFunc(vec3 p) {
@@ -40,7 +40,7 @@ vec3 getNormal(vec3 p) {
 void main() {
   vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
 
-  vec3 cPos = vec3(-cos(time / 10.0), sin(time / 10.0), 3.0);
+  vec3 cPos = vec3(-cos(time / 10.0), sin(time / 0.5), 3.0);
 
   vec3 ray = normalize(vec3(sin(fov) * p.x, sin(fov) * p.y, -cos(fov)));
 

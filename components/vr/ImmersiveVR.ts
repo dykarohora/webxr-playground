@@ -53,6 +53,7 @@ export class ImmersiveVR {
     const canvas = document.createElement('canvas')
     this.gl = canvas.getContext('webgl', {xrCompatible: true}) as WebGLRenderingContext
 
+
     this.renderer = new Renderer(this.gl)
     this.scene.setRenderer(this.renderer)
 
@@ -69,7 +70,7 @@ export class ImmersiveVR {
     this.scene.addNode(boxNode)
 
     this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(session, this.gl)})
-    this.xrSession.requestReferenceSpace('local').then((refSpace: XRReferenceSpace) => {
+    this.xrSession.requestReferenceSpace('bounded-floor').then((refSpace: XRReferenceSpace) => {
       this.xrRefSpace = refSpace
       session.requestAnimationFrame(this.onXRFrame)
     })
@@ -81,7 +82,9 @@ export class ImmersiveVR {
     this.gl = null
   }
 
-  private onXRFrame = (time: DOMHighResTimeStamp, frame: XRFrame) => {
+  private onXRFrame = async (time: DOMHighResTimeStamp, frame: XRFrame) => {
+    const timer = () => new Promise(resolve => setTimeout(resolve, 500))
+
     const session = frame.session
 
     this.scene.startFrame()
@@ -95,6 +98,8 @@ export class ImmersiveVR {
 
       this.gl!.bindFramebuffer(this.gl!.FRAMEBUFFER, glLayer.framebuffer)
       this.gl!.clear(this.gl!.COLOR_BUFFER_BIT | this.gl!.DEPTH_BUFFER_BIT)
+
+      console.log(pose.views.length)
 
       for (let view of pose.views) {
         let viewport = glLayer.getViewport(view)

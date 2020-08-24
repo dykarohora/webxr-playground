@@ -2,10 +2,12 @@ interface Navigator {
   xr?: XRSystem
 }
 
-interface XRSystem {
-  isSessionSupported(xrSessionMode: String): Promise<boolean>
+type SessionMode = 'immersive-ar' | 'immersive-vr' | 'inline'
 
-  requestSession(sessionMode: 'immersive-ar' | 'immersive-vr' | 'inline', sessionInit?: any): Promise<XRSession>
+interface XRSystem extends EventTarget {
+  isSessionSupported(xrSessionMode: SessionMode): Promise<boolean>
+
+  requestSession(sessionMode: SessionMode, sessionInit?: { requiredFeatures: string[], optionalFeatures: string[] }): Promise<XRSession>
 }
 
 interface XRSession extends EventTarget {
@@ -13,7 +15,7 @@ interface XRSession extends EventTarget {
 
   end(): Promise<void>
 
-  updateRenderState(newState: XRRendoerStateInit): void
+  updateRenderState(newState: XRRenderStateInit): void
 
   requestReferenceSpace(type: XRReferenceSpaceType): Promise<XRReferenceSpace>
 

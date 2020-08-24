@@ -70,7 +70,7 @@ export class ImmersiveVR {
     this.scene.addNode(boxNode)
 
     this.xrSession.updateRenderState({baseLayer: new XRWebGLLayer(session, this.gl)})
-    this.xrSession.requestReferenceSpace('bounded-floor').then((refSpace: XRReferenceSpace) => {
+    this.xrSession.requestReferenceSpace('unbounded').then((refSpace: XRReferenceSpace) => {
       this.xrRefSpace = refSpace
       session.requestAnimationFrame(this.onXRFrame)
     })
@@ -83,7 +83,6 @@ export class ImmersiveVR {
   }
 
   private onXRFrame = async (time: DOMHighResTimeStamp, frame: XRFrame) => {
-    const timer = () => new Promise(resolve => setTimeout(resolve, 500))
 
     const session = frame.session
 

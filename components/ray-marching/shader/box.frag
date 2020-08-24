@@ -1,6 +1,8 @@
 #version 300 es
 precision mediump float;
 
+#define rotate(angle) mat2(cos(angle), sin(angle), sin(-angle), cos(angle))
+
 uniform float time;
 uniform vec2 mouse;
 uniform vec2 resolution;

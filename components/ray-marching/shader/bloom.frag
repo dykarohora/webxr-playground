@@ -1,13 +1,16 @@
 #version 300 es
 precision mediump float;
 
-#define rotate(angle) mat2(cos(angle), sin(angle), sin(-angle), cos(angle))
 
 uniform float time;
 uniform vec2 mouse;// 0-1の範囲でマウス座標が渡される、ただし左上が原点
 uniform vec2 resolution;// ウィンドウの解像度
 
 out vec4 fragColor;
+
+mat2 rotate(float angle) {
+return mat2(cos(angle), sin(angle), sin(-angle), cos(angle));
+}
 
 float sdSphere(vec3 p, float r) {
   return length(p) - r;

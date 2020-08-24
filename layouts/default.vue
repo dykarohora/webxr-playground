@@ -42,7 +42,11 @@
       {name: 'Repeatition Sphere', url: '/ray-marching/repeatition-sphere', type: 'link'},
       {name: 'Box', url: '/ray-marching/box', type: 'link'},
       {name: 'Reflect', url: '/ray-marching/reflect', type: 'link'},
-      {name: 'Bloom', url: '/ray-marching/bloom', type: 'link'}
+      {name: 'Bloom', url: '/ray-marching/bloom', type: 'link'},
+      {name: 'Sphere Bloom', url: '/ray-marching/bloom2', type: 'link'},
+      {name: 'Emissive Cube', url: '/ray-marching/emissive-cube', type: 'link'},
+      {name: 'Emissive Light', url: '/ray-marching/emissive-light', type: 'link'},
+      {name: 'Emissive Reflection', url: '/ray-marching/emissive-reflection', type: 'link'},
     ]
   }
 </script>

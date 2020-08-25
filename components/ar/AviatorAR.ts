@@ -32,8 +32,8 @@ export class AviatorAR {
     this.scene = new Scene()
     this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950)
 
-    this.height = window.innerHeight
-    this.width = window.innerWidth
+    this.height = window.innerHeight / 2
+    this.width = window.innerWidth / 2
     this.aspectRatio = this.width / this.height
     this.fov = 50
     this.nearPlane = 0.1

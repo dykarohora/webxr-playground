@@ -71,29 +71,31 @@ export class AviatorVR {
     this.createLights()
     this.createAirPlane()
 
+    this.scene.position.y += 1
+    this.scene.position.z += -0.5
     this.animate()
   }
 
   private createSea() {
-    this.sea = new Sea(2, 2)
-    this.sea.mesh.position.z = -2
+    this.sea = new Sea(600, 400)
+    const s = .0005
+    this.sea.mesh.scale.set(s, s, s)
     this.scene.add(this.sea.mesh)
   }
 
   private createSky() {
     this.sky = new Sky()
-    const s = .0075
+    const s = .0005
     this.sky.mesh.scale.set(s, s, s)
-    this.sky.mesh.position.z = -2
+    this.sky.mesh.position.z = 0.2
     this.scene.add(this.sky.mesh)
   }
 
   private createAirPlane() {
     this.airPlane = new AirPlane()
-    const s = .002
+    const s = .0005
     this.airPlane.mesh.scale.set(s, s, s)
-    this.airPlane.mesh.position.y = 3
-    this.airPlane.mesh.position.z = -2
+    this.airPlane.mesh.position.y = 0.4
     this.scene.add(this.airPlane.mesh)
   }
 

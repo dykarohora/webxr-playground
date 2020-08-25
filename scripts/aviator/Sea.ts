@@ -6,7 +6,8 @@ export class Sea {
   public readonly mesh: Mesh
 
   public constructor(radius: number, length: number) {
-    const geometry = new THREE.CylinderGeometry(radius, radius, length, 40, 10)
+    // const geometry = new THREE.CylinderGeometry(radius, radius, length, 40, 10)
+    const geometry = new THREE.SphereGeometry(radius, 10, 10)
     geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2))
     geometry.mergeVertices()
 

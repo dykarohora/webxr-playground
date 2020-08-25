@@ -48,7 +48,7 @@ export class AviatorAR {
     this.camera.position.set(0, 1.6, 0)
 
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true
+      alpha: true, antialias: true
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.width, this.height)

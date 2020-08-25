@@ -47,7 +47,7 @@ export class AviatorVR {
     // TODO ??
     this.camera.position.set(0, 1.6, 0)
 
-      this.renderer = new THREE.WebGLRenderer({
+    this.renderer = new THREE.WebGLRenderer({
       antialias: true
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -82,6 +82,8 @@ export class AviatorVR {
 
   private createSky() {
     this.sky = new Sky()
+    const s = .0075
+    this.sky.mesh.scale.set(s, s, s)
     this.sky.mesh.position.z = -2
     this.scene.add(this.sky.mesh)
   }

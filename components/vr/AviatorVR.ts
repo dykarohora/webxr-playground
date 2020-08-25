@@ -37,7 +37,7 @@ export class AviatorVR {
     this.aspectRatio = this.width / this.height
     this.fov = 50
     this.nearPlane = 0.1
-    this.farPlane = 10000
+    this.farPlane = 10
 
     this.camera = new THREE.PerspectiveCamera(this.fov, this.aspectRatio, this.nearPlane, this.farPlane)
     this.room = new LineSegments(new BoxLineGeometry(6, 6, 6, 10, 10, 10), new LineBasicMaterial({color: 0x808080}))
@@ -45,11 +45,9 @@ export class AviatorVR {
     // this.scene.add(this.room)
 
     // TODO ??
-    this.camera.position.x = 0
-    this.camera.position.z = 1000
-    this.camera.position.y = 100
+    this.camera.position.set(0, 1.6, 0)
 
-    this.renderer = new THREE.WebGLRenderer({
+      this.renderer = new THREE.WebGLRenderer({
       antialias: true
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -77,21 +75,23 @@ export class AviatorVR {
   }
 
   private createSea() {
-    this.sea = new Sea(600, 800)
-    this.sea.mesh.position.y = -600
+    this.sea = new Sea(2, 2)
+    this.sea.mesh.position.z = -2
     this.scene.add(this.sea.mesh)
   }
 
   private createSky() {
     this.sky = new Sky()
-    this.sky.mesh.position.y = -600
+    this.sky.mesh.position.z = -2
     this.scene.add(this.sky.mesh)
   }
 
   private createAirPlane() {
     this.airPlane = new AirPlane()
-    this.airPlane.mesh.scale.set(.25, .25, .25)
-    this.airPlane.mesh.position.y = 100
+    const s = .002
+    this.airPlane.mesh.scale.set(s, s, s)
+    this.airPlane.mesh.position.y = 3
+    this.airPlane.mesh.position.z = -2
     this.scene.add(this.airPlane.mesh)
   }
 
@@ -124,8 +124,8 @@ export class AviatorVR {
 
   private render = () => {
     this.airPlane.propeller.rotation.x += 0.3
-    this.sea.mesh.rotation.z += .005
-    this.sky.mesh.rotation.z += .01
+    this.sea.mesh.rotation.z += .002
+    this.sky.mesh.rotation.z += .005
 
     this.renderer.render(this.scene, this.camera)
   }

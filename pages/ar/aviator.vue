@@ -14,7 +14,8 @@ import { AviatorAR } from '../../components/ar/AviatorAR'
 export default class extends Vue {
   mounted() {
     const div = document.getElementById('world') as HTMLDivElement
-    const aviator = new AviatorAR(div)
+    const button = document.getElementById('ar') as HTMLButtonElement
+    const aviator = new AviatorAR(div, button)
   }
 }
 </script>

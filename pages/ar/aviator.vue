@@ -1,5 +1,8 @@
 <template>
-  <div id="world"/>
+  <div>
+    <div id="world"/>
+    <button id="ar">start</button>
+  </div>
 </template>
 
 <script lang="ts">

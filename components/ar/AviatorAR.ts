@@ -28,7 +28,15 @@ export class AviatorAR {
 
   private room: LineSegments
 
-  public constructor(htmlElement: HTMLDivElement) {
+  public constructor(htmlElement: HTMLDivElement, button: HTMLButtonElement) {
+    button.addEventListener('click', () => {
+      navigator.xr!.requestSession('immersive-ar').then((session) => {
+        this.renderer.xr.setReferenceSpaceType('local')
+        this.renderer.xr.setSession(session)
+      })
+    })
+
+
     this.scene = new Scene()
     this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950)
 

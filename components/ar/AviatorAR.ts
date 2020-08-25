@@ -4,9 +4,9 @@ import { Sea } from '../../scripts/aviator/Sea'
 import { Sky } from '../../scripts/aviator/Sky'
 import { AirPlane } from '../../scripts/aviator/AirPlane'
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry'
-import { VRButton } from 'three/examples/jsm/webxr/VRButton'
+import { ARButton } from 'three/examples/jsm/webxr/ARButton'
 
-export class AviatorVR {
+export class AviatorAR {
 
   private scene: Scene
   private height: number
@@ -48,7 +48,7 @@ export class AviatorVR {
     this.camera.position.set(0, 1.6, 0)
 
     this.renderer = new THREE.WebGLRenderer({
-      alpha: true, antialias: true
+      antialias: true
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.width, this.height)
@@ -56,7 +56,7 @@ export class AviatorVR {
     this.renderer.shadowMap.enabled = true
     this.renderer.xr.enabled = true
     htmlElement.appendChild(this.renderer.domElement)
-    htmlElement.append(VRButton.createButton(this.renderer))
+    htmlElement.append(ARButton.createButton(this.renderer))
     // VRButton
 
     window.addEventListener('resize', () => {

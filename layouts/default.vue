@@ -37,6 +37,7 @@
       {name: 'Cosmic Cube', url: '/vr/immersive-vr-session', type: 'link'},
       {name: 'Aviator VR', url: '/vr/aviator', type: 'link'},
       {name: 'AR', type: 'title'},
+      {name: 'Aviator AR', url: '/ar/aviator', type: 'link'},
       {name: 'three.js', type: 'title'},
       {name: 'Aviator', url: '/three/aviator', type: 'link'},
       {name: 'Ray Marching', type: 'title'},

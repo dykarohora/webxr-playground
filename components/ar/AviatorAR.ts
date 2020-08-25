@@ -36,7 +36,6 @@ export class AviatorAR {
       })
     })
 
-
     this.scene = new Scene()
     this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950)
 
@@ -79,7 +78,7 @@ export class AviatorAR {
     this.createLights()
     this.createAirPlane()
 
-    this.scene.position.y += 1
+    this.scene.position.y += -0.25
     this.scene.position.z += -0.5
     this.animate()
   }

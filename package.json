@@ -21,7 +21,7 @@
     "nuxt-property-decorator": "^2.7.2",
     "sass-loader": "^9.0.2",
     "simple-line-icons": "2.4.1",
-    "three": "^0.118.3",
+    "three": "^0.125.0",
     "type-result": "^0.9.5"
   },
   "devDependencies": {
